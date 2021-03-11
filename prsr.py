@@ -199,7 +199,7 @@ class Parser:
     node = res.register(self.bin_op(self.comp_expr, ((tokenClass.TT_KEYWORD, "AND"), (tokenClass.TT_KEYWORD, "OR"))))
 
     if res.error:
-      return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected 'CONST', int, float, indentifier, '+', '-', '(' or 'NOT'"))
+      return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected 'VAR', int, float, indentifier, '+', '-', '(' or 'NOT'"))
 
     return res.success(node)
 

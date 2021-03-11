@@ -1,8 +1,8 @@
 class SymbolTable:
-  def __init__(self):
+  def __init__(self, parent=None):
     self.symbols = {}
     self.protected_names = []
-    self.parent = None
+    self.parent = parent
 
   def get(self, name:str):
     value = self.symbols.get(name, None)

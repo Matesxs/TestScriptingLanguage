@@ -1,26 +1,11 @@
-from basic.nodes import Node, BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode, IfNode, ForNode, WhileNode
+from basic.nodes import Node, BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode
 from basic.number import Number
 from basic.error import ErrorBase, RTError
 from typing import Union
 from basic import tokenClass
 from basic.context import Context
-
-class RTResult:
-  def __init__(self):
-    self.value = None
-    self.error:Union[None, ErrorBase] = None
-
-  def register(self, res):
-    if res.error: self.error = res.error
-    return res.value
-
-  def success(self, value):
-    self.value = value
-    return self
-
-  def failure(self, error:ErrorBase):
-    self.error = error
-    return self
+from basic.runtime_result import RTResult
+from .function import Function
 
 class Interpreter:
   def visit(self, node:Node, context:Context):
@@ -176,3 +161,33 @@ class Interpreter:
       if res.error: return res
 
     return res.success(None)
+
+  def visit_FuncDefNode(self, node:FuncDefNode, context:Context) -> RTResult:
+    res = RTResult()
+
+    func_name = node.var_name_tok.value if node.var_name_tok else None
+    body_node = node.body_node
+    arg_names = [arg_name.value for arg_name in node.arg_name_toks]
+    func_value = Function(func_name, body_node, arg_names).set_context(context).set_position(node.pos_start, node.pos_end)
+
+    if node.var_name_tok:
+      context.symbol_table.set(func_name, func_value)
+
+    return res.success(func_value)
+
+  def visit_CallNode(self, node:CallNode, context:Context) -> RTResult:
+    res = RTResult()
+    args = []
+
+    value_to_call = res.register(self.visit(node.node_to_call, context))
+    if res.error: return res
+
+    value_to_call:Function = value_to_call.copy().set_position(node.pos_start, node.pos_end)
+
+    for arg_node in node.arg_nodes:
+      args.append(res.register(self.visit(arg_node, context)))
+      if res.error: return res
+
+    return_val = res.register(value_to_call.execute(args, self))
+    if res.error: return res
+    return res.success(return_val)

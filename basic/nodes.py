@@ -66,3 +66,23 @@ class UnaryOpNode(Node):
 
   def __repr__(self):
     return f"({self.op_tok}, {self.node})"
+  
+class IfNode(Node):
+  def __init__(self, cases:list, else_case:Node):
+    super(IfNode, self).__init__()
+    self.cases = cases
+    self.else_case = else_case
+
+    self.pos_start = self.cases[0][0].pos_start
+    self.pos_end = self.cases[-1][1].pos_end if not self.else_case else else_case.pos_end
+
+  def __repr__(self):
+    ret = "(IF"
+
+    for idx, case in enumerate(self.cases):
+      ret += ("ELIF" if idx > 0 else "") + f" {case[0]} THEN {case[1]}"
+
+    if self.else_case:
+      ret += f" ELSE {self.else_case}"
+
+    return ret + ")"

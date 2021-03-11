@@ -56,6 +56,9 @@ class Lexer:
         tokens.append(self.make_less_than())
       elif self.current_char == '>':
         tokens.append(self.make_greater_than())
+      elif self.current_char == ":": # Equal to THEN
+        tokens.append(tokenClass.Token(tokenClass.TT_KEYWORD, ":", self.pos))
+        self.advance()
       else:
         pos_start = self.pos.copy()
         char = self.current_char

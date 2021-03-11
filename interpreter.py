@@ -1,4 +1,4 @@
-from basic.nodes import Node, BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode
+from basic.nodes import Node, BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode, IfNode
 from basic.number import Number
 from basic.error import ErrorBase, RTError
 from typing import Union
@@ -112,3 +112,22 @@ class Interpreter:
 
     if error: return res.failure(error)
     return res.success(number.set_position(node.pos_start, node.pos_end))
+
+  def visit_IfNode(self, node:IfNode, context:Context) -> RTResult:
+    res = RTResult()
+
+    for condition, expr in node.cases:
+      condition_value = res.register(self.visit(condition, context))
+      if res.error: return res
+
+      if condition_value.is_true():
+        expr_value = res.register(self.visit(expr, context))
+        if res.error: return res
+        return res.success(expr_value)
+
+    if node.else_case:
+      else_value = res.register(self.visit(node.else_case, context))
+      if res.error: return res
+      return res.success(else_value)
+
+    return res.success(None)

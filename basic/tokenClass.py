@@ -36,7 +36,12 @@ KEYWORDS = [
   "ELIF",
   "ELSE",
   "THEN",
-  ":"
+  ":",
+  "FOR",
+  "TO",
+  "STEP",
+  "WHILE",
+  "DO"
 ]
 
 class Token:

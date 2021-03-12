@@ -1,5 +1,5 @@
 from typing import Union
-from . import Token
+from .tokenClass import Token
 
 class Node:
   def __init__(self):

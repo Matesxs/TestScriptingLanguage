@@ -1,5 +1,5 @@
 from typing import Union
-from . import SymbolTable
+from .symbol_table import SymbolTable
 
 class Context:
   def __init__(self, display_name:str, parent=None, parent_entry_pos=None):

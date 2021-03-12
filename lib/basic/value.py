@@ -1,6 +1,6 @@
 from typing import Union
 from .error import RTError
-from . import Position
+from .position import Position
 from . import Context
 from . import RTResult
 

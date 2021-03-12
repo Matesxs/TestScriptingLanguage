@@ -1,6 +1,6 @@
 from typing import Union
 from termcolor import colored
-from . import Position
+from .position import Position
 from . import Context
 from . import string_with_arrows
 

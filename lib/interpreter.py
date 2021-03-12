@@ -1,7 +1,6 @@
 from typing import Union
 from .basic.error import ErrorBase, RTError
-from .nodes import BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode
-from . import Node
+from .nodes import Node, BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode
 from . import Context
 from . import RTResult
 from . import tokenClass

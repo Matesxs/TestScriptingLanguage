@@ -1,4 +1,4 @@
-from .basic import Value
+from . import Value
 from . import Number
 
 class String(Value):

@@ -5,3 +5,5 @@ from .string_val import String
 from .lexer import Lexer
 from .prsr import Parser
 from .interpreter import Interpreter
+from .tokenClass import Token
+from .nodes import Node

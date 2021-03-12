@@ -1,7 +1,7 @@
-from .basic.error.error import IllegalCharError, ExpectedCharacterError, ErrorBase
-from .basic import Position
-from . import tokenClass
 from typing import Union
+from .basic.error import IllegalCharError, ExpectedCharacterError, ErrorBase
+from . import Position
+from . import tokenClass
 
 class Lexer:
   def __init__(self, fn, text):

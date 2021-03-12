@@ -1,10 +1,10 @@
 from typing import Union
-from .basic import Value
 from .nodes import Node
-from .basic import RTResult
-from .basic.error.error import RTError
-from .basic import Context
-from .basic import SymbolTable
+from .basic.error import RTError
+from . import Value
+from . import RTResult
+from . import Context
+from . import SymbolTable
 
 class Function(Value):
   def __init__(self, name:Union[str, None], body_node:Node, arg_names:list):

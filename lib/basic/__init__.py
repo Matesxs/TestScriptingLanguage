@@ -4,4 +4,4 @@ from .runtime_result import RTResult
 from .symbol_table import SymbolTable
 from .value import Value
 from .position import Position
-from .error import error
+from . import error

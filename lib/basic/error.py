@@ -1,8 +1,8 @@
-from ..position import Position
-from ..context import Context
-from ..strings_with_arrows import string_with_arrows
 from typing import Union
 from termcolor import colored
+from . import Position
+from . import Context
+from . import string_with_arrows
 
 class ErrorBase:
   def as_string(self):

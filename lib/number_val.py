@@ -1,6 +1,6 @@
 from typing import Union
-from .basic.error.error import RTError
-from .basic import Value
+from .basic.error import RTError
+from . import Value
 
 class Number(Value):
   def __init__(self, value:Union[int, float]):

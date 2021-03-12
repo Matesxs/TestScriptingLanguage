@@ -1,7 +1,8 @@
 from typing import Union, Callable, Iterable
-from .basic.error.error import InvalidSyntaxError, ErrorBase
-from .nodes import NumberNode, BinOpNode, UnaryOpNode, VarAssignNode, VarAccessNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode, Node
+from .basic.error import InvalidSyntaxError, ErrorBase
+from .nodes import NumberNode, BinOpNode, UnaryOpNode, VarAssignNode, VarAccessNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode
 from . import tokenClass
+from . import Node
 
 class ParserResult:
   def __init__(self):

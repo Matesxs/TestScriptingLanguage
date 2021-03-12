@@ -1,6 +1,6 @@
-from .basic import Position
 from typing import Union
 import string
+from . import Position
 
 TT_IDENTIFIER = "IDENTIFIER"
 TT_KEYWORD = "KEYWORD"

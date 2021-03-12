@@ -4,14 +4,16 @@ from lib import Interpreter
 from lib import Context
 from lib import SymbolTable
 from lib import Number
+from lib import String
 
 global_symbol_table = SymbolTable()
 global_symbol_table.set("NULL", Number(0), protected=True)
 global_symbol_table.set("TRUE", Number(1), protected=True)
 global_symbol_table.set("FALSE", Number(0), protected=True)
+global_symbol_table.set("PICA", String("Svědiroh"), protected=True)
 
 def run(fn, text):
-  if text == "":
+  if text == "" or text == "\n":
     return None, None
 
   # Get tokens

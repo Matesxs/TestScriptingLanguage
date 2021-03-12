@@ -12,6 +12,10 @@ class SymbolTable:
 
     return value
 
+  def exists(self, name:str):
+    if name in self.protected_names: return False
+    return name in self.symbols.keys()
+
   def set(self, name:str, value, protected:bool=False):
     if name in self.protected_names: return False
 

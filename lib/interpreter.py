@@ -1,12 +1,14 @@
 from typing import Union
 from .basic.error import ErrorBase, RTError
-from .nodes import Node, BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode
+from .nodes import Node, BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode, ListNode
 from . import Context
 from . import RTResult
 from . import tokenClass
+from . import Value
 from . import Function
 from . import Number
 from . import String
+from . import List
 
 class Interpreter:
   def visit(self, node:Node, context:Context):
@@ -120,6 +122,7 @@ class Interpreter:
 
   def visit_ForNode(self, node:ForNode, context:Context) -> RTResult:
     res = RTResult()
+    elements = []
 
     start_value:Number = res.register(self.visit(node.start_value_node, context))
     if res.error: return res
@@ -143,25 +146,26 @@ class Interpreter:
       context.symbol_table.set(node.var_name_token.value, Number(i))
       i += step_value.value
       
-      res.register(self.visit(node.body_node, context))
+      elements.append(res.register(self.visit(node.body_node, context)))
       if res.error: return res
 
-    return res.success(None)
+    return res.success(List(elements).set_context(context).set_position(node.pos_start, node.pos_end))
 
   def visit_WhileNode(self, node:WhileNode, context:Context) -> RTResult:
     res = RTResult()
+    elements = []
 
-    condition:Number = res.register(self.visit(node.condition_node, context))
+    condition:Value = res.register(self.visit(node.condition_node, context))
     if res.error: return res
 
     while condition.is_true():
-      res.register(self.visit(node.body_node, context))
+      elements.append(res.register(self.visit(node.body_node, context)))
       if res.error: return res
 
-      condition: Number = res.register(self.visit(node.condition_node, context))
+      condition:Value = res.register(self.visit(node.condition_node, context))
       if res.error: return res
 
-    return res.success(None)
+    return res.success(List(elements).set_context(context).set_position(node.pos_start, node.pos_end))
 
   def visit_FuncDefNode(self, node:FuncDefNode, context:Context) -> RTResult:
     res = RTResult()
@@ -195,3 +199,13 @@ class Interpreter:
 
   def visit_StringNode(self, node:StringNode, context:Context) -> RTResult:
     return RTResult().success(String(node.tok.value).set_position(node.pos_start, node.pos_end).set_context(context))
+
+  def visit_ListNode(self, node:ListNode, context:Context) -> RTResult:
+    res = RTResult()
+    elements = []
+
+    for element_node in node.element_nodes:
+      elements.append(res.register(self.visit(element_node, context)))
+      if res.error: return res
+
+    return res.success(List(elements).set_context(context).set_position(node.pos_start, node.pos_end))

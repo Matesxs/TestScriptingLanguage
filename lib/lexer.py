@@ -47,6 +47,12 @@ class Lexer:
       elif self.current_char == ')':
         tokens.append(tokenClass.Token(tokenClass.TT_RPAREN, pos_start=self.pos))
         self.advance()
+      elif self.current_char == '[':
+        tokens.append(tokenClass.Token(tokenClass.TT_LSBRAC, pos_start=self.pos))
+        self.advance()
+      elif self.current_char == ']':
+        tokens.append(tokenClass.Token(tokenClass.TT_RSBRAC, pos_start=self.pos))
+        self.advance()
       elif self.current_char == '=':
         tokens.append(self.make_equals())
       elif self.current_char == "!":

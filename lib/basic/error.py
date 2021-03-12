@@ -20,7 +20,6 @@ class Error(ErrorBase):
     result += f'\n\nFile {self.pos_start.fn}, line {self.pos_start.ln + 1}, column {self.pos_start.col + 1}:{self.pos_end.col}\n' + string_with_arrows(self.pos_start.ftxt, self.pos_start, self.pos_end)
     return colored(result, "red")
 
-
 class IllegalCharError(Error):
   def __init__(self, pos_start:Union[None, Position], pos_end:Union[None, Position], details=""):
     super().__init__(pos_start, pos_end, 'Illegal Character', details)

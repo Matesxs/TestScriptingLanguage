@@ -1,6 +1,6 @@
 from typing import Union, Callable, Iterable
 from .basic.error import InvalidSyntaxError, ErrorBase
-from .nodes import Node, NumberNode, BinOpNode, UnaryOpNode, VarAssignNode, VarAccessNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode
+from .nodes import Node, NumberNode, BinOpNode, UnaryOpNode, VarAssignNode, VarAccessNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode, ListNode
 from . import tokenClass
 
 class ParserResult:
@@ -198,7 +198,7 @@ class Parser:
       else:
         arg_nodes.append(res.register(self.expr()))
         if res.error:
-          return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected 'VAR', 'IF', 'WHILE', 'FUNC', int, float, indentifier, '+', '-', '(', ')' or 'NOT'"))
+          return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected 'VAR', 'IF', 'WHILE', 'FUNC', int, float, indentifier, '+', '-', '(', ')', '[' or 'NOT'"))
 
         while self.current_token.type == tokenClass.TT_COMMA:
           res.register_advancement()
@@ -247,6 +247,11 @@ class Parser:
       else:
         return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected ')'"))
 
+    elif tok.type == tokenClass.TT_LSBRAC:
+      list_expr = res.register(self.list_expr())
+      if res.error: return res
+      return res.success(list_expr)
+
     elif tok.matches(tokenClass.TT_KEYWORD, "IF"):
       if_expr = res.register(self.if_expr())
       if res.error: return res
@@ -267,7 +272,7 @@ class Parser:
       if res.error: return res
       return res.success(func_def)
 
-    return res.failure(InvalidSyntaxError(tok.pos_start, tok.pos_end, "Expected int, float, identifier, '+', '-', '(', 'IF', 'FOR', 'WHILE', 'FUN'"))
+    return res.failure(InvalidSyntaxError(tok.pos_start, tok.pos_end, "Expected int, float, identifier, '+', '-', '(', '[', 'IF', 'FOR', 'WHILE', 'FUN'"))
 
   def factor(self):
     res = ParserResult()
@@ -304,7 +309,7 @@ class Parser:
 
     node = res.register(self.bin_op(self.arith_expr, (tokenClass.TT_EE, tokenClass.TT_NE, tokenClass.TT_LT, tokenClass.TT_GT, tokenClass.TT_LTE, tokenClass.TT_GTE)))
     if res.error:
-      return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected int, float, identifier, '+', '-', '(' or 'NOT'"))
+      return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected int, float, identifier, '+', '-', '(', '[' or 'NOT'"))
 
     return res.success(node)
 
@@ -336,7 +341,7 @@ class Parser:
     node = res.register(self.bin_op(self.comp_expr, ((tokenClass.TT_KEYWORD, "AND"), (tokenClass.TT_KEYWORD, "OR"))))
 
     if res.error:
-      return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-', '(' or 'NOT'"))
+      return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-', '(', '[' or 'NOT'"))
 
     return res.success(node)
 
@@ -419,3 +424,37 @@ class Parser:
     if res.error: return res
       
     return res.success(FuncDefNode(var_name_tok, arg_name_toks, node_to_return))
+
+  def list_expr(self):
+    res = ParserResult()
+    element_nodes = []
+    pos_start = self.current_token.pos_start.copy()
+
+    if self.current_token.type != tokenClass.TT_LSBRAC:
+      return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected '['"))
+
+    res.register_advancement()
+    self.advance()
+
+    if self.current_token.type == tokenClass.TT_RSBRAC:
+      res.register_advancement()
+      self.advance()
+    else:
+      element_nodes.append(res.register(self.expr()))
+      if res.error:
+        return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected 'VAR', 'IF', 'WHILE', 'FUNC', int, float, indentifier, '+', '-', '(', '[', ']' or 'NOT'"))
+
+      while self.current_token.type == tokenClass.TT_COMMA:
+        res.register_advancement()
+        self.advance()
+
+        element_nodes.append(res.register(self.expr()))
+        if res.error: return res
+
+      if self.current_token.type != tokenClass.TT_RSBRAC:
+        return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected ',' or ']'"))
+
+      res.register_advancement()
+      self.advance()
+      
+    return res.success(ListNode(element_nodes, pos_start, self.current_token.pos_end))

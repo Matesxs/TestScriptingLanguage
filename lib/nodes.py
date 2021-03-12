@@ -1,10 +1,11 @@
 from typing import Union
 from .tokenClass import Token
+from .basic import Position
 
 class Node:
   def __init__(self):
-    self.pos_start = None
-    self.pos_end = None
+    self.pos_start:Union[Position, None] = None
+    self.pos_end:Union[Position, None] = None
 
 class NumberNode(Node):
   def __init__(self, tok:Token):
@@ -115,3 +116,11 @@ class CallNode(Node):
       self.pos_end = self.arg_nodes[-1].pos_end
     else:
       self.pos_end = self.node_to_call.pos_end
+
+class ListNode(Node):
+  def __init__(self, element_nodes:list, pos_start:Union[Position, None]=None, pos_end:Union[Position, None]=None):
+    super(ListNode, self).__init__()
+    self.element_nodes = element_nodes
+
+    self.pos_start = pos_start
+    self.pos_end = pos_end

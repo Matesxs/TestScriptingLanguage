@@ -1,7 +1,7 @@
-from basic import tokenClass
-from basic.nodes import NumberNode, BinOpNode, UnaryOpNode, VarAssignNode, VarAccessNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, Node
 from typing import Union, Callable, Iterable
-from basic.error import InvalidSyntaxError, ErrorBase
+from .basic.error.error import InvalidSyntaxError, ErrorBase
+from .nodes import NumberNode, BinOpNode, UnaryOpNode, VarAssignNode, VarAccessNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode, Node
+from . import tokenClass
 
 class ParserResult:
   def __init__(self):
@@ -223,6 +223,11 @@ class Parser:
       res.register_advancement()
       self.advance()
       return res.success(NumberNode(tok))
+
+    elif tok.type == tokenClass.TT_STRING:
+      res.register_advancement()
+      self.advance()
+      return res.success(StringNode(tok))
 
     elif tok.type == tokenClass.TT_IDENTIFIER:
       res.register_advancement()

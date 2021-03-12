@@ -1,5 +1,5 @@
 from typing import Union
-from basic.error import ErrorBase
+from .error.error import ErrorBase
 
 class RTResult:
   def __init__(self):

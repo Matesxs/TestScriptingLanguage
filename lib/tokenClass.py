@@ -1,9 +1,10 @@
-from basic.position import Position
+from .basic import Position
 from typing import Union
 import string
 
 TT_IDENTIFIER = "IDENTIFIER"
 TT_KEYWORD = "KEYWORD"
+TT_STRING = "STRING"
 TT_INT = "INT"
 TT_FLOAT = "FLOAT"
 TT_PLUS = "PLUS"
@@ -28,6 +29,11 @@ LATTERS = string.ascii_letters
 LATTERS_EXTENDED = LATTERS + "_"
 LATTERS_DIGITS = LATTERS_EXTENDED + DIGITS
 LATTERS_EXTENDED_DIGITS = LATTERS_EXTENDED + DIGITS
+
+ESCAPE_CHARACTERS = {
+  "n": "\n",
+  "t": "\t"
+}
 
 KEYWORDS = [
   "VAR",

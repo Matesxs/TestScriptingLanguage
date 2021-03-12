@@ -1,11 +1,12 @@
-from basic.nodes import Node, BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode
-from basic.number import Number
-from basic.error import ErrorBase, RTError
 from typing import Union
-from basic import tokenClass
-from basic.context import Context
-from basic.runtime_result import RTResult
-from .function import Function
+from .basic.error.error import ErrorBase, RTError
+from .nodes import Node, BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode
+from .basic import Context
+from .basic import RTResult
+from . import tokenClass
+from . import Function
+from . import Number
+from . import String
 
 class Interpreter:
   def visit(self, node:Node, context:Context):
@@ -191,3 +192,6 @@ class Interpreter:
     return_val = res.register(value_to_call.execute(args, self))
     if res.error: return res
     return res.success(return_val)
+
+  def visit_StringNode(self, node:StringNode, context:Context) -> RTResult:
+    return RTResult().success(String(node.tok.value).set_position(node.pos_start, node.pos_end).set_context(context))

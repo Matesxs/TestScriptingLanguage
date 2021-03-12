@@ -1,8 +1,8 @@
 from typing import Union
-from basic.position import Position
-from basic.context import Context
-from basic.error import RTError
-from basic.runtime_result import RTResult
+from .position import Position
+from .context import Context
+from .error.error import RTError
+from .runtime_result import RTResult
 
 class Value:
   def __init__(self):

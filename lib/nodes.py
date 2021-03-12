@@ -1,4 +1,4 @@
-from basic.tokenClass import Token
+from .tokenClass import Token
 from typing import Union
 
 class Node:
@@ -9,6 +9,14 @@ class Node:
 class NumberNode(Node):
   def __init__(self, tok:Token):
     super(NumberNode, self).__init__()
+    self.tok = tok
+
+    self.pos_start = self.tok.pos_start
+    self.pos_end = self.tok.pos_end
+
+class StringNode(Node):
+  def __init__(self, tok:Token):
+    super(StringNode, self).__init__()
     self.tok = tok
 
     self.pos_start = self.tok.pos_start

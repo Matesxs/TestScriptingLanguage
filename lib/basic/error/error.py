@@ -1,6 +1,6 @@
-from basic.strings_with_arrows import string_with_arrows
-from basic.position import Position
-from basic.context import Context
+from ..position import Position
+from ..context import Context
+from ..strings_with_arrows import string_with_arrows
 from typing import Union
 from termcolor import colored
 

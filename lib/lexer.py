@@ -1,6 +1,6 @@
-from basic.error import IllegalCharError, ExpectedCharacterError, ErrorBase
-from basic.position import Position
-from basic import tokenClass
+from .basic.error.error import IllegalCharError, ExpectedCharacterError, ErrorBase
+from .basic import Position
+from . import tokenClass
 from typing import Union
 
 class Lexer:
@@ -25,6 +25,8 @@ class Lexer:
         tokens.append(self.make_number())
       elif self.current_char in tokenClass.LATTERS_EXTENDED:
         tokens.append(self.make_identifier())
+      elif self.current_char == "\"":
+        tokens.append(self.make_string())
       elif self.current_char == '+':
         tokens.append(tokenClass.Token(tokenClass.TT_PLUS, pos_start=self.pos))
         self.advance()
@@ -154,3 +156,25 @@ class Lexer:
       tok_type = tokenClass.TT_ARROW
 
     return tokenClass.Token(tok_type, pos_start=pos_start, pos_end=self.pos)
+
+  def make_string(self):
+    string = ""
+    pos_start = self.pos.copy()
+    escape_character = False
+
+    self.advance()
+
+    while self.current_char is not None and (self.current_char != "\"" or escape_character):
+      if escape_character:
+        string += tokenClass.ESCAPE_CHARACTERS.get(self.current_char, self.current_char)
+      else:
+        if self.current_char == "\\":
+          escape_character = True
+        else:
+          string += self.current_char
+
+      self.advance()
+      escape_character = False
+
+    self.advance()
+    return tokenClass.Token(tokenClass.TT_STRING, string, pos_start, self.pos)

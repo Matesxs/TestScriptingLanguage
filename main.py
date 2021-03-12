@@ -1,9 +1,9 @@
-from basic.lexer import Lexer
-from basic.prsr import Parser
-from basic.interpreter import Interpreter
-from basic.context import Context
-from basic.symbol_table import SymbolTable
-from basic.number import Number
+from lib import Lexer
+from lib import Parser
+from lib import Interpreter
+from lib import Context
+from lib import SymbolTable
+from lib import Number
 
 global_symbol_table = SymbolTable()
 global_symbol_table.set("NULL", Number(0), protected=True)

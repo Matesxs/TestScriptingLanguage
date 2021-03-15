@@ -192,7 +192,7 @@ class Parser:
 
       arg_nodes = []
 
-      if self.current_token == tokenClass.TT_RPAREN:
+      if self.current_token.type == tokenClass.TT_RPAREN:
         res.register_advancement()
         self.advance()
       else:

@@ -1,6 +1,6 @@
 from typing import Union
 from .basic.error import IllegalCharError, ExpectedCharacterError, ErrorBase
-from . import Position
+from .basic.position import Position
 from . import tokenClass
 
 class Lexer:

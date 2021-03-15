@@ -1,6 +1,6 @@
 from typing import Union
 from .tokenClass import Token
-from .basic import Position
+from .basic.position import Position
 
 class Node:
   def __init__(self):

@@ -1,14 +1,14 @@
 from typing import Union
 from .basic.error import ErrorBase, RTError
 from .nodes import Node, BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode, ListNode
-from . import Context
-from . import RTResult
+from .basic.context import Context
+from .basic.runtime_result import RTResult
 from . import tokenClass
-from . import Value
-from . import Function
-from . import Number
-from . import String
-from . import List
+from .basic.value import Value
+from .function_val import Function
+from .number_val import Number
+from .string_val import String
+from .list_val import List
 
 class Interpreter:
   def visit(self, node:Node, context:Context):
@@ -28,7 +28,7 @@ class Interpreter:
     if not value:
       return res.failure(RTError(node.pos_start, node.pos_end, f"'{var_name}' is not defined", context))
 
-    value = value.copy().set_position(node.pos_start, node.pos_end)
+    value = value.copy().set_position(node.pos_start, node.pos_end).set_context(context)
     return res.success(value)
 
   def visit_VarAssignNode(self, node:VarAssignNode, context:Context) -> RTResult:
@@ -195,6 +195,8 @@ class Interpreter:
 
     return_val = res.register(value_to_call.execute(args, self))
     if res.error: return res
+
+    return_val = return_val.copy().set_position(node.pos_start, node.pos_end).set_context(context)
     return res.success(return_val)
 
   def visit_StringNode(self, node:StringNode, context:Context) -> RTResult:

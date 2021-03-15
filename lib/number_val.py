@@ -1,6 +1,7 @@
 from typing import Union
+from math import pi
 from .basic.error import RTError
-from . import Value
+from .basic.value import Value
 
 class Number(Value):
   def __init__(self, value:Union[int, float]):
@@ -93,7 +94,6 @@ class Number(Value):
   def notted(self):
     return Number(1 if self.value == 0 else 0).set_context(self.context), None
 
-
   def is_true(self):
     return self.value != 0
 
@@ -105,3 +105,19 @@ class Number(Value):
 
   def __repr__(self):
     return str(self.value)
+
+  @classmethod
+  def null(cls):
+    return Number(0)
+
+  @classmethod
+  def true(cls):
+    return Number(1)
+
+  @classmethod
+  def false(cls):
+    return Number(0)
+
+  @classmethod
+  def pi(cls):
+    return Number(pi)

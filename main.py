@@ -1,16 +1,29 @@
-from lib import Lexer
-from lib import Parser
-from lib import Interpreter
-from lib import Context
-from lib import SymbolTable
-from lib import Number
-from lib import String
+from lib.lexer import Lexer
+from lib.prsr import Parser
+from lib.interpreter import Interpreter
+from lib.basic.context import Context
+from lib.basic.symbol_table import SymbolTable
+from lib.number_val import Number
+from lib.builtin_func_val import BuildInFunction
 
 global_symbol_table = SymbolTable()
-global_symbol_table.set("NULL", Number(0), protected=True)
-global_symbol_table.set("TRUE", Number(1), protected=True)
-global_symbol_table.set("FALSE", Number(0), protected=True)
-global_symbol_table.set("PICA", String("Svědiroh"), protected=True)
+global_symbol_table.set("NULL", Number.null(), protected=True)
+global_symbol_table.set("TRUE", Number.true(), protected=True)
+global_symbol_table.set("FALSE", Number.false(), protected=True)
+global_symbol_table.set("PI", Number.pi(), protected=True)
+global_symbol_table.set("PRINT", BuildInFunction.print(), protected=True)
+global_symbol_table.set("PRINT_RET", BuildInFunction.print_ret(), protected=True)
+global_symbol_table.set("INPUT", BuildInFunction.input(), protected=True)
+global_symbol_table.set("INPUT_NUM", BuildInFunction.input_number(), protected=True)
+global_symbol_table.set("CLEAR", BuildInFunction.clear(), protected=True)
+global_symbol_table.set("CLS", BuildInFunction.clear(), protected=True)
+global_symbol_table.set("IS_NUM", BuildInFunction.is_number(), protected=True)
+global_symbol_table.set("IS_STR", BuildInFunction.is_string(), protected=True)
+global_symbol_table.set("IS_LIST", BuildInFunction.is_list(), protected=True)
+global_symbol_table.set("IS_FUNC", BuildInFunction.is_function(), protected=True)
+global_symbol_table.set("APPEND", BuildInFunction.append(), protected=True)
+global_symbol_table.set("POP", BuildInFunction.pop(), protected=True)
+global_symbol_table.set("EXTEND", BuildInFunction.extend(), protected=True)
 
 def run(fn, text):
   if text == "" or text == "\n":

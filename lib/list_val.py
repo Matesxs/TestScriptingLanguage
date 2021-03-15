@@ -1,6 +1,6 @@
 from .basic.error import RTError
-from . import Value
-from . import Number
+from .basic.value import Value
+from .number_val import Number
 
 class List(Value):
   def __init__(self, elements:list):
@@ -51,7 +51,10 @@ class List(Value):
       return None, self.illegal_operation(other)
 
   def copy(self):
-    return List(self.elements[:]).set_context(self.context).set_position(self.pos_start, self.pos_end)
+    return List(self.elements).set_context(self.context).set_position(self.pos_start, self.pos_end)
 
   def __repr__(self):
     return str(self.elements)
+
+  def __str__(self):
+    return ", ".join([str(x) for x in self.elements])

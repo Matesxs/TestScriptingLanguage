@@ -1,5 +1,5 @@
-from . import Value
-from . import Number
+from .basic.value import Value
+from .number_val import Number
 
 class String(Value):
   def __init__(self, value:str):
@@ -26,3 +26,6 @@ class String(Value):
 
   def __repr__(self):
     return f"\"{self.value}\""
+
+  def __str__(self):
+    return self.value

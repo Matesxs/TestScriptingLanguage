@@ -80,6 +80,14 @@ class BuildInFunction(BaseFunction):
 
   execute_is_number.arg_names = ["value"]
 
+  def execute_is_int(self, exec_context: Context) -> RTResult:
+    val = exec_context.symbol_table.get("value")
+    if not isinstance(val, Number):
+      return RTResult().success(Number.false())
+
+    return RTResult().success(Number.true() if val.value == int(val.value) else Number.false())
+  execute_is_int.arg_names = ["value"]
+
   def execute_is_string(self, exec_context: Context) -> RTResult:
     is_string = isinstance(exec_context.symbol_table.get("value"), String)
     return RTResult().success(Number.true() if is_string else Number.false())
@@ -167,6 +175,10 @@ class BuildInFunction(BaseFunction):
   @classmethod
   def is_number(cls):
     return BuildInFunction("is_number")
+
+  @classmethod
+  def is_int(cls):
+    return BuildInFunction("is_int")
 
   @classmethod
   def is_string(cls):

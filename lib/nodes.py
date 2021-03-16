@@ -60,41 +60,44 @@ class UnaryOpNode(Node):
     self.pos_end = node.pos_end
   
 class IfNode(Node):
-  def __init__(self, cases:list, else_case:Node):
+  def __init__(self, cases:list, else_case:tuple):
     super(IfNode, self).__init__()
     self.cases = cases
     self.else_case = else_case
 
     self.pos_start = self.cases[0][0].pos_start
-    self.pos_end = self.cases[-1][0].pos_end if not self.else_case else else_case.pos_end
+    self.pos_end = self.cases[-1][0].pos_end if not self.else_case else else_case[0].pos_end
   
 class ForNode(Node):
-  def __init__(self, var_name_token:Token, start_value_node:Node, end_value_node:Node, body_node:Node, step_value_node:Union[Node, None]=None):
+  def __init__(self, var_name_token:Token, start_value_node:Node, end_value_node:Node, body_node:Node, step_value_node:Union[Node, None], should_return_null:bool):
     super(ForNode, self).__init__()
     self.var_name_token = var_name_token
     self.start_value_node = start_value_node
     self.end_value_node = end_value_node
     self.body_node = body_node
     self.step_value_node = step_value_node
+    self.should_return_null = should_return_null
 
     self.pos_start = self.var_name_token.pos_start
     self.pos_end = self.body_node.pos_end
 
 class WhileNode(Node):
-  def __init__(self, condition_node:Node, body_node:Node):
+  def __init__(self, condition_node:Node, body_node:Node, should_return_null:bool):
     super(WhileNode, self).__init__()
     self.condition_node = condition_node
     self.body_node = body_node
+    self.should_return_null = should_return_null
 
     self.pos_start = self.condition_node.pos_start
     self.pos_end = self.body_node.pos_end
 
 class FuncDefNode(Node):
-  def __init__(self, var_name_tok:Union[Token, None], arg_name_toks:list, body_node:Node):
+  def __init__(self, var_name_tok:Union[Token, None], arg_name_toks:list, body_node:Node, should_return_null:bool):
     super(FuncDefNode, self).__init__()
     self.var_name_tok = var_name_tok
     self.arg_name_toks = arg_name_toks
     self.body_node = body_node
+    self.should_return_null = should_return_null
 
     if self.var_name_tok:
       self.pos_start = self.var_name_tok.pos_start

@@ -26,6 +26,8 @@ TT_GTE = "GTE"
 TT_COMMA = "COMMA"
 TT_ARROW = "ARROW"
 TT_EOF = "EOF"
+TT_NEWLINE = "NEWLINE"
+
 DIGITS = "0123456789"
 LATTERS = string.ascii_letters
 LATTERS_EXTENDED = LATTERS + "_"
@@ -45,14 +47,13 @@ KEYWORDS = [
   "IF",
   "ELIF",
   "ELSE",
-  "THEN",
-  ":",
   "FOR",
   "TO",
   "STEP",
   "WHILE",
-  "DO",
-  "FUNC"
+  "THEN",
+  "FUNC",
+  "END"
 ]
 
 class Token:

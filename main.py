@@ -26,7 +26,7 @@ global_symbol_table.set("POP", BuildInFunction.pop(), protected=True)
 global_symbol_table.set("EXTEND", BuildInFunction.extend(), protected=True)
 
 def run(fn, text):
-  if text == "" or text == "\n":
+  if text.strip() == "":
     return None, None
 
   # Get tokens

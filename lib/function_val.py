@@ -2,12 +2,14 @@ from typing import Union
 from .basic.runtime_result import RTResult
 from .basic.base_function import BaseFunction
 from .nodes import Node
+from .number_val import Number
 
 class Function(BaseFunction):
-  def __init__(self, name:Union[str, None], body_node:Node, arg_names:list):
+  def __init__(self, name:Union[str, None], body_node:Node, arg_names:list, should_return_null:bool):
     super(Function, self).__init__(name)
     self.body_node = body_node
     self.arg_names = arg_names
+    self.should_return_null = should_return_null
 
   def execute(self, args:list, interpreter):
     res = RTResult()
@@ -19,10 +21,10 @@ class Function(BaseFunction):
 
     value = res.register(interpreter.visit(self.body_node, exec_ctx))
     if res.error: return res
-    return res.success(value)
+    return res.success(Number.null() if self.should_return_null else value)
 
   def copy(self):
-    copy = Function(self.name, self.body_node, self.arg_names)
+    copy = Function(self.name, self.body_node, self.arg_names, self.should_return_null)
     copy.set_context(self.context)
     copy.set_position(self.pos_start, self.pos_end)
     return copy

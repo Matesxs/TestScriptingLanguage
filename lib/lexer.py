@@ -25,6 +25,9 @@ class Lexer:
         tokens.append(self.make_number())
       elif self.current_char in tokenClass.LATTERS_EXTENDED:
         tokens.append(self.make_identifier())
+      elif self.current_char in ";\n":
+        tokens.append(tokenClass.Token(tokenClass.TT_NEWLINE, pos_start=self.pos))
+        self.advance()
       elif self.current_char == "\"":
         tokens.append(self.make_string())
       elif self.current_char == '+':

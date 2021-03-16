@@ -53,7 +53,10 @@ KEYWORDS = [
   "WHILE",
   "THEN",
   "FUNC",
-  "END"
+  "END",
+  "RETURN",
+  "CONTINUE",
+  "BREAK"
 ]
 
 class Token:

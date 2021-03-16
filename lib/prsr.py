@@ -1,6 +1,6 @@
 from typing import Union, Callable, Iterable
 from .basic.error import InvalidSyntaxError, ErrorBase
-from .nodes import Node, NumberNode, BinOpNode, UnaryOpNode, VarAssignNode, VarAccessNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode, ListNode
+from .nodes import Node, NumberNode, BinOpNode, UnaryOpNode, VarAssignNode, VarAccessNode, IfNode, ForNode, WhileNode, FuncDefNode, CallNode, StringNode, ListNode, ReturnNode, ContinueNode, BreakNode
 from . import tokenClass
 
 class ParserResult:
@@ -72,7 +72,7 @@ class Parser:
       res.register_advancement()
       self.advance()
 
-    statement = res.register(self.expr())
+    statement = res.register(self.statement())
     if res.error: return res
     statements.append(statement)
 
@@ -91,7 +91,7 @@ class Parser:
       if not more_statements:
         break
 
-      statement = res.try_register(self.expr())
+      statement = res.try_register(self.statement())
       if not statement:
         self.reverse(res.to_reverse_count)
         more_statements = False
@@ -100,6 +100,33 @@ class Parser:
       statements.append(statement)
 
     return res.success(ListNode(statements, start_pos, self.current_token.pos_end.copy()))
+
+  def statement(self):
+    res = ParserResult()
+    pos_start = self.current_token.pos_start.copy()
+
+    if self.current_token.matches(tokenClass.TT_KEYWORD, "RETURN"):
+      res.register_advancement()
+      self.advance()
+
+      expr = res.try_register(self.expr())
+      if not expr:
+        self.reverse(res.to_reverse_count)
+      return res.success(ReturnNode(expr, pos_start, self.current_token.pos_end.copy()))
+    elif self.current_token.matches(tokenClass.TT_KEYWORD, "CONTINUE"):
+      res.register_advancement()
+      self.advance()
+      return res.success(ContinueNode(pos_start, self.current_token.pos_end.copy()))
+    elif self.current_token.matches(tokenClass.TT_KEYWORD, "BREAK"):
+      res.register_advancement()
+      self.advance()
+      return res.success(BreakNode(pos_start, self.current_token.pos_end.copy()))
+    
+    expr = res.register(self.expr())
+    if res.error:
+      return res.failure(InvalidSyntaxError(pos_start, self.current_token.pos_end, "Expected 'RETURN', 'CONTINUE', 'BREAK' 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-', '(', '[' or 'NOT'"))
+
+    return res.success(expr)
 
   def expr(self):
     res = ParserResult()
@@ -165,7 +192,7 @@ class Parser:
         else:
           return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected 'END'"))
       else:
-        expr = res.register(self.expr())
+        expr = res.register(self.statement())
         if res.error: return res
         else_case = (expr, False)
 
@@ -222,7 +249,7 @@ class Parser:
         new_cases, else_case = all_cases
         cases.extend(new_cases)
     else:
-      expr = res.register(self.expr())
+      expr = res.register(self.statement())
       if res.error: return res
       cases.append((condition, expr, False))
 
@@ -301,7 +328,7 @@ class Parser:
 
       return res.success(ForNode(var_name, start_value, end_value, body, step_value, True))
 
-    body = res.register(self.expr())
+    body = res.register(self.statement())
     if res.error: return res
 
     return res.success(ForNode(var_name, start_value, end_value, body, step_value, False))
@@ -339,7 +366,7 @@ class Parser:
 
       return res.success(WhileNode(condition, body, True))
 
-    body = res.register(self.expr())
+    body = res.register(self.statement())
     if res.error: return res
 
     return res.success(WhileNode(condition, body, False))
@@ -555,7 +582,7 @@ class Parser:
       node_to_return = res.register(self.expr())
       if res.error: return res
       
-      return res.success(FuncDefNode(var_name_tok, arg_name_toks, node_to_return, False))
+      return res.success(FuncDefNode(var_name_tok, arg_name_toks, node_to_return, True))
 
     if self.current_token.type != tokenClass.TT_NEWLINE:
       return res.failure(InvalidSyntaxError(self.current_token.pos_start, self.current_token.pos_end, "Expected '->' or NEWLINE"))
@@ -572,7 +599,7 @@ class Parser:
     res.register_advancement()
     self.advance()
 
-    return res.success(FuncDefNode(var_name_tok, arg_name_toks, body, True))
+    return res.success(FuncDefNode(var_name_tok, arg_name_toks, body, False))
 
   def list_expr(self):
     res = ParserResult()

@@ -92,12 +92,12 @@ class WhileNode(Node):
     self.pos_end = self.body_node.pos_end
 
 class FuncDefNode(Node):
-  def __init__(self, var_name_tok:Union[Token, None], arg_name_toks:list, body_node:Node, should_return_null:bool):
+  def __init__(self, var_name_tok:Union[Token, None], arg_name_toks:list, body_node:Node, should_auto_return:bool):
     super(FuncDefNode, self).__init__()
     self.var_name_tok = var_name_tok
     self.arg_name_toks = arg_name_toks
     self.body_node = body_node
-    self.should_return_null = should_return_null
+    self.should_auto_return = should_auto_return
 
     if self.var_name_tok:
       self.pos_start = self.var_name_tok.pos_start
@@ -125,5 +125,25 @@ class ListNode(Node):
     super(ListNode, self).__init__()
     self.element_nodes = element_nodes
 
+    self.pos_start = pos_start
+    self.pos_end = pos_end
+
+class ReturnNode(Node):
+  def __init__(self, node_to_return:Union[Node, None], pos_start:Union[Position, None]=None, pos_end:Union[Position, None]=None):
+    super(ReturnNode, self).__init__()
+    self.node_to_return = node_to_return
+
+    self.pos_start = pos_start
+    self.pos_end = pos_end
+
+class ContinueNode(Node):
+  def __init__(self, pos_start:Union[Position, None]=None, pos_end:Union[Position, None]=None):
+    super(ContinueNode, self).__init__()
+    self.pos_start = pos_start
+    self.pos_end = pos_end
+
+class BreakNode(Node):
+  def __init__(self, pos_start:Union[Position, None]=None, pos_end:Union[Position, None]=None):
+    super(BreakNode, self).__init__()
     self.pos_start = pos_start
     self.pos_end = pos_end

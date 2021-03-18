@@ -1,4 +1,5 @@
 import os
+import subprocess
 from typing import Union
 from .basic.base_function import BaseFunction
 from .basic.runtime_result import RTResult
@@ -152,6 +153,39 @@ class BuildInFunction(BaseFunction):
 
   execute_extend.arg_names = ["listA", "listB"]
 
+  def execute_len(self, exec_context: Context) -> RTResult:
+    _list = exec_context.symbol_table.get("list")
+    
+    if not isinstance(_list, List):
+      return RTResult().failure(RTError(self.pos_start, self.pos_end, "Argument must be list", exec_context))
+
+    return RTResult().success(Number(len(_list.elements)))
+  execute_len.arg_names = ["list"]
+
+  def execute_run(self, exec_context: Context) -> RTResult:
+    fn = exec_context.symbol_table.get("fn")
+
+    if not isinstance(fn, String):
+      return RTResult().failure(RTError(self.pos_start, self.pos_end, "Argument must be string", exec_context))
+
+    fn = fn.value
+
+    if not os.path.exists(fn):
+      return RTResult().failure(RTError(self.pos_start, self.pos_end, "Path doesn't exist", exec_context))
+
+    if not os.path.isfile(fn):
+      return RTResult().failure(RTError(self.pos_start, self.pos_end, "Path is not file", exec_context))
+
+    try:
+      process = subprocess.Popen(f"python {exec_context.symbol_table.entry_point} {fn}")
+      process.wait()
+    except Exception as e:
+      return RTResult().failure(RTError(self.pos_start, self.pos_end, f"Failed to execute script \"{fn}\"\n{e}", exec_context))
+
+    return RTResult().success(Number.null())
+
+  execute_run.arg_names = ["fn"]
+
   @classmethod
   def print(cls):
     return BuildInFunction("print")
@@ -203,3 +237,11 @@ class BuildInFunction(BaseFunction):
   @classmethod
   def extend(cls):
     return BuildInFunction("extend")
+
+  @classmethod
+  def len(cls):
+    return BuildInFunction("len")
+
+  @classmethod
+  def run(cls):
+    return BuildInFunction("run")

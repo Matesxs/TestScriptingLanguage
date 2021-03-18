@@ -3,9 +3,22 @@ PRINT("Hello world!")
 PRINT("This is first test of my scripting language.")
 PRINT("So take a seat and enjoy a ride!");
 
+PRINT("\nTesting for loop")
 VAR a = 0
 FOR VAR b = 500 TO 0 STEP -0.5 THEN
   VAR a = a + 1
 END
 
 PRINT(a)
+PRINT(b)
+
+PRINT("\nTesting while loop")
+VAR b = 0
+
+WHILE a > 0 THEN
+  VAR b = b + 1
+  VAR a = a - 2
+END
+
+PRINT(a)
+PRINT(b)

@@ -22,3 +22,20 @@ END
 
 PRINT(a)
 PRINT(b)
+
+PRINT("\nTesting functions")
+FUNC test(a,b)
+  VAR a = a + b
+  VAR b = b / 2
+
+  WHILE a < 100000 THEN
+    VAR a = a^b
+  END
+
+  RETURN a^b
+END
+
+VAR c = 2
+VAR d = 4
+
+PRINT(test(c, d))

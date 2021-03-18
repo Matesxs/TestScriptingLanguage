@@ -1,0 +1,11 @@
+# Print some messages
+PRINT("Hello world!")
+PRINT("This is first test of my scripting language.")
+PRINT("So take a seat and enjoy a ride!");
+
+VAR a = 0
+FOR VAR b = 500 TO 0 STEP -0.5 THEN
+  VAR a = a + 1
+END
+
+PRINT(a)

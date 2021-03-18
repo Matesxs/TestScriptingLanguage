@@ -58,10 +58,5 @@ if __name__ == '__main__':
 
   with open(path, "r") as f:
     script = f.read()
-    value, error = run(path, script)
+    _, error = run(path, script)
     if error: print(error.as_string())
-    elif value:
-      if len(value.elements) == 1:
-        print(repr(value.elements[0]))
-      else:
-        print(repr(value))

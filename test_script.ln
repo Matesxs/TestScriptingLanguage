@@ -3,6 +3,7 @@ PRINT("Hello world!")
 PRINT("This is first test of my scripting language.")
 PRINT("So take a seat and enjoy a ride!");
 
+# Test program functionality
 PRINT("\nTesting for loop")
 VAR a = 0
 FOR VAR b = 500 TO 0 STEP -0.5 THEN
